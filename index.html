@@ -9,7 +9,6 @@
 <style>
 * { box-sizing: border-box; }
 
-/* ===== 등급 색상 ===== */
 :root {
   --common: #b9bdc9;
   --uncommon: #7be05f;
@@ -217,10 +216,17 @@ h1 {
 }
 
 .decision-rank {
-  color: #ffd23f;
   font-size: 25px;
   font-weight: bold;
   margin-bottom: 16px;
+}
+
+.decision-rank.gradient {
+  background: var(--rank-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .decision-description {
@@ -296,7 +302,7 @@ footer {
     <div id="tiers"></div>
   </div>
 
-  <footer>HALORIAN LUCK TESTER · VERSION 1.2</footer>
+  <footer>HALORIAN LUCK TESTER · VERSION 1.3</footer>
 </div>
 
 <!-- ===== 재추첨 확인창 ===== -->
@@ -433,6 +439,28 @@ function showRank(r, rolling) {
 /* ===== 재추첨 확인창 열기 ===== */
 function openDecision(r) {
   decisionRankEl.textContent = r.name;
+
+  decisionRankEl.classList.toggle(
+    "gradient",
+    !!r.gradient
+  );
+
+  decisionRankEl.style.setProperty(
+    "--rank-fill",
+    r.fill
+  );
+
+  if (r.gradient) {
+    decisionRankEl.style.color = "transparent";
+  } else {
+    const color = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue(
+      "--" + r.id
+    ).trim();
+
+    decisionRankEl.style.color = color;
+  }
 
   decisionOverlay.classList.add("show");
   decisionOverlay.setAttribute("aria-hidden", "false");
