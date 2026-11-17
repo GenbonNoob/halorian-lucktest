@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,6 +6,20 @@
 <title>Halorian Luck Tester</title>
 <style>
 * { box-sizing: border-box; }
+
+/* ===== 등급 색상 (단색 / 그라데이션) ===== */
+:root {
+  --common:     #b9bdc9;
+  --uncommon:   #7be05f;
+  --rare:       #4da6ff;
+  --legendary:  #ffd23f;
+  --mystic:     #ff6f61;
+  --godly:      #a65cff;
+  --exotic:     linear-gradient(90deg, #ff4d4d, #ff9f43, #ffe94d, #5de07a, #4da6ff, #a65cff, #ff5cc8);
+  --secret:     linear-gradient(90deg, #ff1f1f, #7a0000 50%, #000);
+  --unob:       #000;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -18,6 +31,7 @@ body {
   align-items: center;
   padding: 20px;
 }
+
 .container {
   width: 100%;
   max-width: 480px;
@@ -28,29 +42,49 @@ body {
   box-shadow: 0 0 25px #0008;
 }
 .logo { font-size: 42px; margin-bottom: 8px; }
-h1 {
-  font-size: 25px;
-  color: #a9baff;
-  letter-spacing: 2px;
-  margin: 8px 0;
-}
+h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
 .subtitle { color: #9299b0; font-size: 12px; }
+
+/* ===== 결과 박스 ===== */
 .result {
+  --glow: #414761;
   margin: 30px 0 20px;
   padding: 25px 10px;
   min-height: 145px;
   background: #10121c;
-  border: 1px solid #414761;
+  border: 1px solid var(--glow);
+  box-shadow: 0 0 0 transparent;
+  transition: border-color .4s, box-shadow .4s;
 }
+.result.revealed { box-shadow: 0 0 22px var(--glow); }
 .result-label { color: #858da8; font-size: 12px; }
 .result-name {
   font-size: 30px;
   font-weight: bold;
   margin-top: 15px;
   color: #fff;
+  min-height: 38px;
+  transition: opacity .15s, transform .15s;
+}
+.result-name.rolling { opacity: .55; transform: scale(.96); }
+.result-name.pop { animation: pop .45s ease-out; }
+.result-name.gradient {
+  background: var(--fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 .result-chance { color: #aeb7d5; font-size: 13px; margin-top: 10px; }
-button {
+
+@keyframes pop {
+  0%   { transform: scale(.7); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ===== 메인 버튼 ===== */
+#drawBtn {
   width: 100%;
   padding: 16px;
   border: 0;
@@ -60,40 +94,41 @@ button {
   font-weight: bold;
   font-family: inherit;
   cursor: pointer;
+  transition: background .3s, color .3s, filter .2s, transform .1s;
 }
-button:active { transform: scale(.98); }
-button:hover { background: #91a5ff; }
-.probabilities {
-  margin-top: 28px;
-  text-align: left;
-  font-size: 13px;
-}
+#drawBtn:hover:not(:disabled) { filter: brightness(1.12); }
+#drawBtn:active:not(:disabled) { transform: scale(.98); }
+#drawBtn:disabled { cursor: default; filter: brightness(.85); }
+
+/* ===== 확률 목록 (등급 색 버튼) ===== */
+.probabilities { margin-top: 28px; text-align: left; font-size: 13px; }
 .probabilities h2 {
   font-size: 15px;
   color: #a9baff;
   border-bottom: 1px solid #414761;
   padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 .tier {
   display: flex;
   justify-content: space-between;
-  padding: 7px 2px;
-  border-bottom: 1px solid #292e40;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 9px 12px;
+  background: var(--fill);
+  color: var(--ink);
+  font-weight: bold;
+  border: 1px solid #ffffff22;
+  transition: transform .2s, box-shadow .2s, filter .2s;
 }
-.common { color: #d5d9e5; }
-.uncommon { color: #65d58b; }
-.rare { color: #64aaff; }
-.legendary { color: #c28aff; }
-.mystic { color: #ff85c8; }
-.godly { color: #ffcf62; }
-.exotic { color: #ff885e; }
-.secret { color: #f4f4f4; }
-.unob { color: #ff5252; }
-footer {
-  margin-top: 25px;
-  color: #656d85;
-  font-size: 10px;
+.tier.hit {
+  transform: scale(1.03);
+  box-shadow: 0 0 16px var(--glow);
+  filter: brightness(1.15);
 }
+.tier.unob { border-color: #555; }
+
+footer { margin-top: 25px; color: #656d85; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -102,57 +137,106 @@ footer {
   <h1>HALORIAN</h1>
   <div class="subtitle">LUCK RANK TESTER</div>
 
-  <div class="result">
+  <div class="result" id="resultBox">
     <div class="result-label">YOUR LUCK RANK</div>
     <div class="result-name" id="rank">???</div>
     <div class="result-chance" id="chance">운을 시험해 보세요.</div>
   </div>
 
-  <button onclick="drawRank()">TEST YOUR LUCK</button>
+  <button id="drawBtn" onclick="drawRank()">TEST YOUR LUCK</button>
 
   <div class="probabilities">
     <h2>RANK PROBABILITIES</h2>
-    <div class="tier common"><span>COMMON</span><span>60%</span></div>
-    <div class="tier uncommon"><span>UNCOMMON</span><span>25%</span></div>
-    <div class="tier rare"><span>RARE</span><span>10%</span></div>
-    <div class="tier legendary"><span>LEGENDARY</span><span>3.5%</span></div>
-    <div class="tier mystic"><span>MYSTIC</span><span>1%</span></div>
-    <div class="tier godly"><span>GODLY</span><span>0.4%</span></div>
-    <div class="tier exotic"><span>EXOTIC</span><span>0.09%</span></div>
-    <div class="tier secret"><span>SECRET</span><span>0.01%</span></div>
-    <div class="tier unob"><span>UNOBTAINABLE</span><span>0%</span></div>
+    <div id="tiers"></div>
   </div>
 
-  <footer>HALORIAN LUCK TESTER · VERSION 1.0</footer>
+  <footer>HALORIAN LUCK TESTER · VERSION 1.1</footer>
 </div>
 
 <script>
 const ranks = [
-  { name: "COMMON", chance: 60, color: "#d5d9e5" },
-  { name: "UNCOMMON", chance: 25, color: "#65d58b" },
-  { name: "RARE", chance: 10, color: "#64aaff" },
-  { name: "LEGENDARY", chance: 3.5, color: "#c28aff" },
-  { name: "MYSTIC", chance: 1, color: "#ff85c8" },
-  { name: "GODLY", chance: 0.4, color: "#ffcf62" },
-  { name: "EXOTIC", chance: 0.09, color: "#ff885e" },
-  { name: "SECRET", chance: 0.01, color: "#f4f4f4" }
+  { id: "common",    name: "COMMON",       chance: 60,   fill: "var(--common)",    ink: "#10121c", glow: "#b9bdc9" },
+  { id: "uncommon",  name: "UNCOMMON",     chance: 25,   fill: "var(--uncommon)",  ink: "#10121c", glow: "#7be05f" },
+  { id: "rare",      name: "RARE",         chance: 10,   fill: "var(--rare)",      ink: "#10121c", glow: "#4da6ff" },
+  { id: "legendary", name: "LEGENDARY",    chance: 3.5,  fill: "var(--legendary)", ink: "#10121c", glow: "#ffd23f" },
+  { id: "mystic",    name: "MYSTIC",       chance: 1,    fill: "var(--mystic)",    ink: "#10121c", glow: "#ff6f61" },
+  { id: "godly",     name: "GODLY",        chance: 0.4,  fill: "var(--godly)",     ink: "#fff",    glow: "#a65cff" },
+  { id: "exotic",    name: "EXOTIC",       chance: 0.09, fill: "var(--exotic)",    ink: "#10121c", glow: "#ff9f43", gradient: true },
+  { id: "secret",    name: "SECRET",       chance: 0.01, fill: "var(--secret)",    ink: "#fff",    glow: "#ff1f1f", gradient: true },
+  { id: "unob",      name: "UNOBTAINABLE", chance: 0,    fill: "var(--unob)",      ink: "#fff",    glow: "#888" }
 ];
 
+const rankEl   = document.getElementById("rank");
+const chanceEl = document.getElementById("chance");
+const boxEl    = document.getElementById("resultBox");
+const btnEl    = document.getElementById("drawBtn");
+const tiersEl  = document.getElementById("tiers");
+
+/* 확률 목록 생성 */
+ranks.forEach(r => {
+  const row = document.createElement("div");
+  row.className = "tier" + (r.id === "unob" ? " unob" : "");
+  row.id = "tier-" + r.id;
+  row.style.setProperty("--fill", r.fill);
+  row.style.setProperty("--ink", r.ink);
+  row.style.setProperty("--glow", r.glow);
+  row.innerHTML = `<span>${r.name}</span><span>${r.chance}%</span>`;
+  tiersEl.appendChild(row);
+});
+
+const rollable = ranks.filter(r => r.chance > 0);
+const totalChance = rollable.reduce((s, r) => s + r.chance, 0);
+
+function pickRank() {
+  let roll = Math.random() * totalChance;
+  for (const r of rollable) {
+    roll -= r.chance;
+    if (roll < 0) return r;
+  }
+  return rollable[0];
+}
+
+function showRank(r, rolling) {
+  rankEl.textContent = r.name;
+  rankEl.classList.toggle("gradient", !!r.gradient);
+  rankEl.style.setProperty("--fill", r.fill);
+  rankEl.style.color = r.gradient ? "" : r.fill.replace(/var\((--[\w-]+)\)/, (_, v) =>
+    getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+  rankEl.classList.toggle("rolling", rolling);
+}
+
 function drawRank() {
-  const roll = Math.random() * 100;
-  let total = 0;
+  if (btnEl.disabled) return;
+  btnEl.disabled = true;
+  boxEl.classList.remove("revealed");
+  rankEl.classList.remove("pop");
+  document.querySelectorAll(".tier.hit").forEach(t => t.classList.remove("hit"));
+  chanceEl.textContent = "...";
 
-  for (const rank of ranks) {
-    total += rank.chance;
+  const result = pickRank();
+  let ticks = 0;
+  const maxTicks = 14;
 
-    if (roll < total) {
-      document.getElementById("rank").textContent = rank.name;
-      document.getElementById("rank").style.color = rank.color;
-      document.getElementById("chance").textContent =
-        "Probability: " + rank.chance + "%";
+  const timer = setInterval(() => {
+    ticks++;
+    if (ticks < maxTicks) {
+      showRank(rollable[Math.floor(Math.random() * rollable.length)], true);
       return;
     }
-  }
+    clearInterval(timer);
+    showRank(result, false);
+    void rankEl.offsetWidth;
+    rankEl.classList.add("pop");
+
+    chanceEl.textContent = "Probability: " + result.chance + "%";
+    boxEl.style.setProperty("--glow", result.glow);
+    boxEl.classList.add("revealed");
+
+    btnEl.style.background = result.fill;
+    btnEl.style.color = result.ink;
+    document.getElementById("tier-" + result.id).classList.add("hit");
+    btnEl.disabled = false;
+  }, 60);
 }
 </script>
 </body>
