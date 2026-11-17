@@ -1,23 +1,25 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Halorian Luck Tester</title>
+
 <style>
 * { box-sizing: border-box; }
 
-/* ===== 등급 색상 (단색 / 그라데이션) ===== */
+/* ===== 등급 색상 ===== */
 :root {
-  --common:     #b9bdc9;
-  --uncommon:   #7be05f;
-  --rare:       #4da6ff;
-  --legendary:  #ffd23f;
-  --mystic:     #ff6f61;
-  --godly:      #a65cff;
-  --exotic:     linear-gradient(90deg, #ff4d4d, #ff9f43, #ffe94d, #5de07a, #4da6ff, #a65cff, #ff5cc8);
-  --secret:     linear-gradient(90deg, #ff1f1f, #7a0000 50%, #000);
-  --unob:       #000;
+  --common: #b9bdc9;
+  --uncommon: #7be05f;
+  --rare: #4da6ff;
+  --legendary: #ffd23f;
+  --mystic: #ff6f61;
+  --godly: #a65cff;
+  --exotic: linear-gradient(90deg, #ff4d4d, #ff9f43, #ffe94d, #5de07a, #4da6ff, #a65cff, #ff5cc8);
+  --secret: linear-gradient(90deg, #ff1f1f, #7a0000 50%, #000);
+  --unob: #000;
 }
 
 body {
@@ -41,9 +43,20 @@ body {
   padding: 28px 20px;
   box-shadow: 0 0 25px #0008;
 }
+
 .logo { font-size: 42px; margin-bottom: 8px; }
-h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
-.subtitle { color: #9299b0; font-size: 12px; }
+
+h1 {
+  font-size: 25px;
+  color: #a9baff;
+  letter-spacing: 2px;
+  margin: 8px 0;
+}
+
+.subtitle {
+  color: #9299b0;
+  font-size: 12px;
+}
 
 /* ===== 결과 박스 ===== */
 .result {
@@ -56,8 +69,16 @@ h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
   box-shadow: 0 0 0 transparent;
   transition: border-color .4s, box-shadow .4s;
 }
-.result.revealed { box-shadow: 0 0 22px var(--glow); }
-.result-label { color: #858da8; font-size: 12px; }
+
+.result.revealed {
+  box-shadow: 0 0 22px var(--glow);
+}
+
+.result-label {
+  color: #858da8;
+  font-size: 12px;
+}
+
 .result-name {
   font-size: 30px;
   font-weight: bold;
@@ -66,8 +87,16 @@ h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
   min-height: 38px;
   transition: opacity .15s, transform .15s;
 }
-.result-name.rolling { opacity: .55; transform: scale(.96); }
-.result-name.pop { animation: pop .45s ease-out; }
+
+.result-name.rolling {
+  opacity: .55;
+  transform: scale(.96);
+}
+
+.result-name.pop {
+  animation: pop .45s ease-out;
+}
+
 .result-name.gradient {
   background: var(--fill);
   -webkit-background-clip: text;
@@ -75,11 +104,16 @@ h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-.result-chance { color: #aeb7d5; font-size: 13px; margin-top: 10px; }
+
+.result-chance {
+  color: #aeb7d5;
+  font-size: 13px;
+  margin-top: 10px;
+}
 
 @keyframes pop {
-  0%   { transform: scale(.7); opacity: 0; }
-  60%  { transform: scale(1.12); opacity: 1; }
+  0% { transform: scale(.7); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
   100% { transform: scale(1); }
 }
 
@@ -96,12 +130,27 @@ h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
   cursor: pointer;
   transition: background .3s, color .3s, filter .2s, transform .1s;
 }
-#drawBtn:hover:not(:disabled) { filter: brightness(1.12); }
-#drawBtn:active:not(:disabled) { transform: scale(.98); }
-#drawBtn:disabled { cursor: default; filter: brightness(.85); }
 
-/* ===== 확률 목록 (등급 색 버튼) ===== */
-.probabilities { margin-top: 28px; text-align: left; font-size: 13px; }
+#drawBtn:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+#drawBtn:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+#drawBtn:disabled {
+  cursor: default;
+  filter: brightness(.85);
+}
+
+/* ===== 확률 목록 ===== */
+.probabilities {
+  margin-top: 28px;
+  text-align: left;
+  font-size: 13px;
+}
+
 .probabilities h2 {
   font-size: 15px;
   color: #a9baff;
@@ -109,6 +158,7 @@ h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
+
 .tier {
   display: flex;
   justify-content: space-between;
@@ -121,17 +171,109 @@ h1 { font-size: 25px; color: #a9baff; letter-spacing: 2px; margin: 8px 0; }
   border: 1px solid #ffffff22;
   transition: transform .2s, box-shadow .2s, filter .2s;
 }
+
 .tier.hit {
   transform: scale(1.03);
   box-shadow: 0 0 16px var(--glow);
   filter: brightness(1.15);
 }
-.tier.unob { border-color: #555; }
 
-footer { margin-top: 25px; color: #656d85; font-size: 10px; }
+.tier.unob {
+  border-color: #555;
+}
+
+/* ===== 재추첨 확인창 ===== */
+.decision-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, .78);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.decision-overlay.show {
+  display: flex;
+}
+
+.decision-card {
+  width: 100%;
+  max-width: 380px;
+  background: #191c2a;
+  border: 2px solid #ff6f61;
+  box-shadow: 0 0 30px #ff6f6140;
+  padding: 26px 20px;
+  text-align: center;
+  animation: pop .3s ease-out;
+}
+
+.decision-title {
+  color: #ff6f61;
+  font-size: 19px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.decision-rank {
+  color: #ffd23f;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.decision-description {
+  color: #b9bdc9;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.decision-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.decision-buttons button {
+  flex: 1;
+  padding: 14px 8px;
+  border: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter .2s, transform .1s;
+}
+
+.decision-buttons button:hover {
+  filter: brightness(1.15);
+}
+
+.decision-buttons button:active {
+  transform: scale(.97);
+}
+
+#rerollYes {
+  background: #ff6f61;
+  color: #10121c;
+}
+
+#keepRank {
+  background: #718cff;
+  color: #10121c;
+}
+
+footer {
+  margin-top: 25px;
+  color: #656d85;
+  font-size: 10px;
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
   <div class="logo">🍀</div>
   <h1>HALORIAN</h1>
@@ -140,104 +282,260 @@ footer { margin-top: 25px; color: #656d85; font-size: 10px; }
   <div class="result" id="resultBox">
     <div class="result-label">YOUR LUCK RANK</div>
     <div class="result-name" id="rank">???</div>
-    <div class="result-chance" id="chance">운을 시험해 보세요.</div>
+    <div class="result-chance" id="chance">
+      운을 시험해 보세요.
+    </div>
   </div>
 
-  <button id="drawBtn" onclick="drawRank()">TEST YOUR LUCK</button>
+  <button id="drawBtn" onclick="drawRank()">
+    TEST YOUR LUCK
+  </button>
 
   <div class="probabilities">
     <h2>RANK PROBABILITIES</h2>
     <div id="tiers"></div>
   </div>
 
-  <footer>HALORIAN LUCK TESTER · VERSION 1.1</footer>
+  <footer>HALORIAN LUCK TESTER · VERSION 1.2</footer>
+</div>
+
+<!-- ===== 재추첨 확인창 ===== -->
+<div
+  class="decision-overlay"
+  id="decisionOverlay"
+  aria-hidden="true"
+>
+  <div
+    class="decision-card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="decisionTitle"
+  >
+    <div class="decision-title" id="decisionTitle">
+      HIGH RANK DETECTED!
+    </div>
+
+    <div class="decision-rank" id="decisionRank">
+      MYSTIC
+    </div>
+
+    <div class="decision-description">
+      현재 등급을 포기하고<br>
+      새로운 등급에 도전하시겠습니까?<br><br>
+      다시 돌리면 현재 등급은 사라집니다.
+    </div>
+
+    <div class="decision-buttons">
+      <button id="rerollYes">
+        YES · REROLL
+      </button>
+
+      <button id="keepRank">
+        NO · KEEP
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
+/* ===== 등급 데이터 ===== */
 const ranks = [
-  { id: "common",    name: "COMMON",       chance: 60,   fill: "var(--common)",    ink: "#10121c", glow: "#b9bdc9" },
-  { id: "uncommon",  name: "UNCOMMON",     chance: 25,   fill: "var(--uncommon)",  ink: "#10121c", glow: "#7be05f" },
-  { id: "rare",      name: "RARE",         chance: 10,   fill: "var(--rare)",      ink: "#10121c", glow: "#4da6ff" },
-  { id: "legendary", name: "LEGENDARY",    chance: 3.5,  fill: "var(--legendary)", ink: "#10121c", glow: "#ffd23f" },
-  { id: "mystic",    name: "MYSTIC",       chance: 1,    fill: "var(--mystic)",    ink: "#10121c", glow: "#ff6f61" },
-  { id: "godly",     name: "GODLY",        chance: 0.4,  fill: "var(--godly)",     ink: "#fff",    glow: "#a65cff" },
-  { id: "exotic",    name: "EXOTIC",       chance: 0.09, fill: "var(--exotic)",    ink: "#10121c", glow: "#ff9f43", gradient: true },
-  { id: "secret",    name: "SECRET",       chance: 0.01, fill: "var(--secret)",    ink: "#fff",    glow: "#ff1f1f", gradient: true },
-  { id: "unob",      name: "UNOBTAINABLE", chance: 0,    fill: "var(--unob)",      ink: "#fff",    glow: "#888" }
+  { id: "common", name: "COMMON", chance: 60, fill: "var(--common)", ink: "#10121c", glow: "#b9bdc9" },
+  { id: "uncommon", name: "UNCOMMON", chance: 25, fill: "var(--uncommon)", ink: "#10121c", glow: "#7be05f" },
+  { id: "rare", name: "RARE", chance: 10, fill: "var(--rare)", ink: "#10121c", glow: "#4da6ff" },
+  { id: "legendary", name: "LEGENDARY", chance: 3.5, fill: "var(--legendary)", ink: "#10121c", glow: "#ffd23f" },
+  { id: "mystic", name: "MYSTIC", chance: 1, fill: "var(--mystic)", ink: "#10121c", glow: "#ff6f61" },
+  { id: "godly", name: "GODLY", chance: 0.4, fill: "var(--godly)", ink: "#fff", glow: "#a65cff" },
+  { id: "exotic", name: "EXOTIC", chance: 0.09, fill: "var(--exotic)", ink: "#10121c", glow: "#ff9f43", gradient: true },
+  { id: "secret", name: "SECRET", chance: 0.01, fill: "var(--secret)", ink: "#fff", glow: "#ff1f1f", gradient: true },
+  { id: "unob", name: "UNOBTAINABLE", chance: 0, fill: "var(--unob)", ink: "#fff", glow: "#888" }
 ];
 
-const rankEl   = document.getElementById("rank");
+const rankEl = document.getElementById("rank");
 const chanceEl = document.getElementById("chance");
-const boxEl    = document.getElementById("resultBox");
-const btnEl    = document.getElementById("drawBtn");
-const tiersEl  = document.getElementById("tiers");
+const boxEl = document.getElementById("resultBox");
+const btnEl = document.getElementById("drawBtn");
+const tiersEl = document.getElementById("tiers");
 
-/* 확률 목록 생성 */
+const decisionOverlay = document.getElementById("decisionOverlay");
+const decisionRankEl = document.getElementById("decisionRank");
+const rerollYesBtn = document.getElementById("rerollYes");
+const keepRankBtn = document.getElementById("keepRank");
+
+/* ===== 재추첨 대상 등급 ===== */
+const rerollChoiceRanks = new Set([
+  "mystic",
+  "legendary",
+  "godly",
+  "exotic",
+  "secret"
+]);
+
+let isAnimating = false;
+let awaitingDecision = false;
+
+/* ===== 확률 목록 생성 ===== */
 ranks.forEach(r => {
   const row = document.createElement("div");
+
   row.className = "tier" + (r.id === "unob" ? " unob" : "");
   row.id = "tier-" + r.id;
+
   row.style.setProperty("--fill", r.fill);
   row.style.setProperty("--ink", r.ink);
   row.style.setProperty("--glow", r.glow);
-  row.innerHTML = `<span>${r.name}</span><span>${r.chance}%</span>`;
+
+  row.innerHTML =
+    `<span>${r.name}</span><span>${r.chance}%</span>`;
+
   tiersEl.appendChild(row);
 });
 
 const rollable = ranks.filter(r => r.chance > 0);
-const totalChance = rollable.reduce((s, r) => s + r.chance, 0);
 
+const totalChance = rollable.reduce(
+  (s, r) => s + r.chance, 0
+);
+
+/* ===== 랜덤 등급 추첨 ===== */
 function pickRank() {
   let roll = Math.random() * totalChance;
+
   for (const r of rollable) {
     roll -= r.chance;
+
     if (roll < 0) return r;
   }
+
   return rollable[0];
 }
 
+/* ===== 결과 표시 ===== */
 function showRank(r, rolling) {
   rankEl.textContent = r.name;
+
   rankEl.classList.toggle("gradient", !!r.gradient);
+
   rankEl.style.setProperty("--fill", r.fill);
-  rankEl.style.color = r.gradient ? "" : r.fill.replace(/var\((--[\w-]+)\)/, (_, v) =>
-    getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+
+  rankEl.style.color = r.gradient
+    ? ""
+    : r.fill.replace(
+        /var\((--[\w-]+)\)/,
+        (_, v) => getComputedStyle(
+          document.documentElement
+        ).getPropertyValue(v).trim()
+      );
+
   rankEl.classList.toggle("rolling", rolling);
 }
 
-function drawRank() {
-  if (btnEl.disabled) return;
+/* ===== 재추첨 확인창 열기 ===== */
+function openDecision(r) {
+  decisionRankEl.textContent = r.name;
+
+  decisionOverlay.classList.add("show");
+  decisionOverlay.setAttribute("aria-hidden", "false");
+}
+
+/* ===== 재추첨 확인창 닫기 ===== */
+function closeDecision() {
+  decisionOverlay.classList.remove("show");
+  decisionOverlay.setAttribute("aria-hidden", "true");
+}
+
+/* ===== 추첨 실행 ===== */
+function drawRank(isReroll = false) {
+  if (isAnimating) return;
+
+  if (isReroll) {
+    if (!awaitingDecision) return;
+  } else {
+    if (btnEl.disabled || awaitingDecision) return;
+  }
+
+  awaitingDecision = false;
+  closeDecision();
+
+  isAnimating = true;
   btnEl.disabled = true;
+
   boxEl.classList.remove("revealed");
   rankEl.classList.remove("pop");
-  document.querySelectorAll(".tier.hit").forEach(t => t.classList.remove("hit"));
+
+  document.querySelectorAll(".tier.hit").forEach(t => {
+    t.classList.remove("hit");
+  });
+
   chanceEl.textContent = "...";
 
   const result = pickRank();
+
   let ticks = 0;
   const maxTicks = 14;
 
   const timer = setInterval(() => {
     ticks++;
+
     if (ticks < maxTicks) {
-      showRank(rollable[Math.floor(Math.random() * rollable.length)], true);
+      showRank(
+        rollable[Math.floor(Math.random() * rollable.length)],
+        true
+      );
       return;
     }
+
     clearInterval(timer);
+
     showRank(result, false);
+
     void rankEl.offsetWidth;
     rankEl.classList.add("pop");
 
-    chanceEl.textContent = "Probability: " + result.chance + "%";
+    chanceEl.textContent =
+      "Probability: " + result.chance + "%";
+
     boxEl.style.setProperty("--glow", result.glow);
     boxEl.classList.add("revealed");
 
     btnEl.style.background = result.fill;
     btnEl.style.color = result.ink;
-    document.getElementById("tier-" + result.id).classList.add("hit");
-    btnEl.disabled = false;
+
+    document
+      .getElementById("tier-" + result.id)
+      .classList.add("hit");
+
+    isAnimating = false;
+
+    /* MYSTIC 이상이면 선택창 표시 */
+    if (rerollChoiceRanks.has(result.id)) {
+      awaitingDecision = true;
+      openDecision(result);
+    } else {
+      btnEl.disabled = false;
+    }
+
   }, 60);
 }
+
+/* ===== YES: 현재 등급 포기 후 재추첨 ===== */
+rerollYesBtn.addEventListener("click", () => {
+  if (!awaitingDecision) return;
+
+  drawRank(true);
+});
+
+/* ===== NO: 현재 등급 확정 ===== */
+keepRankBtn.addEventListener("click", () => {
+  if (!awaitingDecision) return;
+
+  awaitingDecision = false;
+
+  closeDecision();
+
+  btnEl.disabled = false;
+});
 </script>
+
 </body>
 </html>
