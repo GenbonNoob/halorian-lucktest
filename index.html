@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halorian Luck Tester</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #10121c;
+  color: #eeeef7;
+  font-family: Consolas, monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.container {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  background: #191c2a;
+  border: 2px solid #414761;
+  padding: 28px 20px;
+  box-shadow: 0 0 25px #0008;
+}
+.logo { font-size: 42px; margin-bottom: 8px; }
+h1 {
+  font-size: 25px;
+  color: #a9baff;
+  letter-spacing: 2px;
+  margin: 8px 0;
+}
+.subtitle { color: #9299b0; font-size: 12px; }
+.result {
+  margin: 30px 0 20px;
+  padding: 25px 10px;
+  min-height: 145px;
+  background: #10121c;
+  border: 1px solid #414761;
+}
+.result-label { color: #858da8; font-size: 12px; }
+.result-name {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 15px;
+  color: #fff;
+}
+.result-chance { color: #aeb7d5; font-size: 13px; margin-top: 10px; }
+button {
+  width: 100%;
+  padding: 16px;
+  border: 0;
+  background: #718cff;
+  color: #10121c;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+}
+button:active { transform: scale(.98); }
+button:hover { background: #91a5ff; }
+.probabilities {
+  margin-top: 28px;
+  text-align: left;
+  font-size: 13px;
+}
+.probabilities h2 {
+  font-size: 15px;
+  color: #a9baff;
+  border-bottom: 1px solid #414761;
+  padding-bottom: 10px;
+}
+.tier {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 2px;
+  border-bottom: 1px solid #292e40;
+}
+.common { color: #d5d9e5; }
+.uncommon { color: #65d58b; }
+.rare { color: #64aaff; }
+.legendary { color: #c28aff; }
+.mystic { color: #ff85c8; }
+.godly { color: #ffcf62; }
+.exotic { color: #ff885e; }
+.secret { color: #f4f4f4; }
+.unob { color: #ff5252; }
+footer {
+  margin-top: 25px;
+  color: #656d85;
+  font-size: 10px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">🍀</div>
+  <h1>HALORIAN</h1>
+  <div class="subtitle">LUCK RANK TESTER</div>
+
+  <div class="result">
+    <div class="result-label">YOUR LUCK RANK</div>
+    <div class="result-name" id="rank">???</div>
+    <div class="result-chance" id="chance">운을 시험해 보세요.</div>
+  </div>
+
+  <button onclick="drawRank()">TEST YOUR LUCK</button>
+
+  <div class="probabilities">
+    <h2>RANK PROBABILITIES</h2>
+    <div class="tier common"><span>COMMON</span><span>60%</span></div>
+    <div class="tier uncommon"><span>UNCOMMON</span><span>25%</span></div>
+    <div class="tier rare"><span>RARE</span><span>10%</span></div>
+    <div class="tier legendary"><span>LEGENDARY</span><span>3.5%</span></div>
+    <div class="tier mystic"><span>MYSTIC</span><span>1%</span></div>
+    <div class="tier godly"><span>GODLY</span><span>0.4%</span></div>
+    <div class="tier exotic"><span>EXOTIC</span><span>0.09%</span></div>
+    <div class="tier secret"><span>SECRET</span><span>0.01%</span></div>
+    <div class="tier unob"><span>UNOBTAINABLE</span><span>0%</span></div>
+  </div>
+
+  <footer>HALORIAN LUCK TESTER · VERSION 1.0</footer>
+</div>
+
+<script>
+const ranks = [
+  { name: "COMMON", chance: 60, color: "#d5d9e5" },
+  { name: "UNCOMMON", chance: 25, color: "#65d58b" },
+  { name: "RARE", chance: 10, color: "#64aaff" },
+  { name: "LEGENDARY", chance: 3.5, color: "#c28aff" },
+  { name: "MYSTIC", chance: 1, color: "#ff85c8" },
+  { name: "GODLY", chance: 0.4, color: "#ffcf62" },
+  { name: "EXOTIC", chance: 0.09, color: "#ff885e" },
+  { name: "SECRET", chance: 0.01, color: "#f4f4f4" }
+];
+
+function drawRank() {
+  const roll = Math.random() * 100;
+  let total = 0;
+
+  for (const rank of ranks) {
+    total += rank.chance;
+
+    if (roll < total) {
+      document.getElementById("rank").textContent = rank.name;
+      document.getElementById("rank").style.color = rank.color;
+      document.getElementById("chance").textContent =
+        "Probability: " + rank.chance + "%";
+      return;
+    }
+  }
+}
+</script>
+</body>
+</html>
